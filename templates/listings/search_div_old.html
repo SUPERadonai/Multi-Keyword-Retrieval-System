@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block title %} | Search Results{% endblock %}
+
+{% block content %}
+
+  
+    
+      <!-- Breadcrumb -->
+      <section id="bc" class="mt-3">
+        <div class="container">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="{% url 'index' %}">
+                  <i class="fas fa-home"></i> Home</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a href="{% url 'listings' %}">Browse Listings</a>
+              </li>
+              <li class="breadcrumb-item active"> Search Results</li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+    
+      <!-- Listings -->
+      <section id="listings" class="py-4">
+        <div class="container">
+          <div class="row">
+              {% if listings %}
+          {% for listing in listings %}
+          <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+                <img class="card-img-top" src="{{ listing.photo.url }}" alt="">
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">${{ listing.price | intcomma }}</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary">{{ listing.room_num }}</h4>
+                    <p>
+<!--                      <i class="fas fa-map-marker text-secondary"></i> {{ div_name }}</p>-->
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-th-large"></i> Sqft: {{ listing.area }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-car"></i> Orientation: {{ listing.orientation }}</div>
+                  </div>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-bed"></i> Serial number: {{ listing.h_num }}</div>
+                    <div class="col-6">
+<!--                      <i class="fas fa-bath"></i> -->
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-12">
+                      <i class="fas fa-user"></i>Agent ID: {{ listing.agent_id }}</div>
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-6">
+                      {% if listing.status == '0' %}
+                      <i class="fas fa-clock"></i>Status: 出售中</div>
+                      {% else %}
+                      <i class="fas fa-clock"></i>Status: 出租中</div>
+                      {% endif %}
+                  </div>
+                  <hr>
+                  <a href="{% url 'listing_old' listing.id %}" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12">
+            <p>No listings available</p>
+          </div>
+        {% endif %}  
+          </div>
+        </div>
+      </section>
+
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %} | Dashboard{% endblock %}
+
+{% block content %}
+<section id="" class="py-5 text-white" style="background-color:darkblue;">
+    <div class="container">
+        <div class="row text-center">
+        <div class="col-md-12">
+            <h1 class="display-4">Admin Dashboard</h1>
+            <p class="lead">Manage all Real Estate Account</p>
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <section id="bc" class="mt-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+                <i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="breadcrumb-item active"> Dashboard</li>
+            <li class="breadcrumb-item">
+            <a href="{% url 'admin_agent' %}">View All Agents</a>
+            </li>
+             <li class="breadcrumb-item">
+            <a href="{% url 'admin_blacklist' %}">View Blacklist</a>
+            </li>
+             <li class="breadcrumb-item">
+            <a href="{% url 'admin_mvp' %}">View MVP</a>
+            </li>
+        </ol>
+        </nav>
+    </div>
+    </section>
+
+    <!-- Alerts -->
+    {% include 'partials/_alerts.html' %}
+
+    <section id="dashboard" class="py-4">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12">
+                <h2>Welcome {{ user.first_name }}</h2>
+                                {% if customer %}
+                    <p>Here are the log of all customers</p>
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">User ID</th>
+                            <th scope="col">User Name</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Join Date</th>
+                            <th scope="col">Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for User in customer %}
+                            <tr>
+                                <td>{{ User.id}}</td>
+                                <td>{{ User.username }}</td>
+                                <td>{{ User.email }}</td>
+                                <td>{{ User.date_joined }}</td>
+                                <td>{{ User.last_login }}</td>
+                                <td>
+                                    <form action="{% url 'admin_add_bla_cus' %}" method="POST">
+                                         {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{User.id}}">
+                                        <input type="submit" class="btn btn-light" value="Add to Blacklist">
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                    {% else %}
+                        <p>There are no user is customer</p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %} | Dashboard{% endblock %}
+
+{% block content %}
+<section id="" class="py-5 text-white" style="background-color:darkblue;">
+    <div class="container">
+        <div class="row text-center">
+        <div class="col-md-12">
+            <h1 class="display-4">Agent Dashboard</h1>
+            <p class="lead">Manage customer Real Estate Account</p>
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <section id="bc" class="mt-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+                <i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="breadcrumb-item active"> Dashboard</li>
+               <li class="breadcrumb-item">
+            <a href="{% url 'agent_house' %}">View Houses In Charge</a>
+            </li>
+            <li class="breadcrumb-item">
+            <a href="{% url 'agent_blacklist' %}">View Customer Blacklist</a>
+            </li>
+        </ol>
+        </nav>
+    </div>
+    </section>
+
+    <!-- Alerts -->
+    {% include 'partials/_alerts.html' %}
+
+    <section id="dashboard" class="py-4">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12">
+                <h2>Welcome {{ user.first_name }}</h2>
+                {% if customer %}
+                    <p>Here are all customers</p>
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">UserID</th>
+                            <th scope="col">UserName</th>
+                            <th scope="col">E-mail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in customer %}
+                            <tr>
+                                <td>{{ user.id}}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                   <form action="{% url 'agent_add_blacklist' %}" method="POST">
+                                         {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{user.id}}">
+                                        <input type="submit" class="btn btn-light" value="Add to Blacklist">
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                    {% else %}
+                        <p>There are no user is customer</p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

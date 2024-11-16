@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block title %} | Browse Listings{% endblock %}
+
+{% block content %}
+<section id="" class="py-5 text-white" style="background-color:darkblue;">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h1 class="display-4">Browse Our Second-Hand Subdivisions</h1>
+                <p class="lead">Buying a second hand property can provide you with a more cost effective option as it is often less expensive than a new home and also offers access to more established communities and amenities.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}">
+                        <i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="breadcrumb-item active"> Browse Listings</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Listings -->
+<section id="listings" class="py-4">
+    <div class="container">
+        <div class="row">
+
+            {% if page %}
+            {% for listing in page %}
+            <div class="col-md-6 col-lg-4 mb-4">
+
+                <div class="card listing-preview">
+                    <img class="card-img-top" src="{{ listing.photo.url }}" alt="" style="width: 340px; height: 300px";>
+                    <div class="card-img-overlay">
+                        <h2>
+                            <span class="badge badge-secondary text-white">${{ listing.price | intcomma }}</span>
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="listing-heading text-center">
+                            <h4 class="text-primary">{{ listing.house_name }}</h4>
+                            <p>
+                                <i class="fas fa-map-marker text-secondary"></i> {{ listing.address }} </p>
+                            <!--                    {{ listing.state }}, {{ listing.zipcode}}-->
+                        </div>
+                        <hr>
+                        <div class="row py-2 text-secondary">
+                            <div class="col-6">
+                                <i class="fas fa-th-large"></i> Year: {{ listing.build_year }}
+                            </div>
+                            <div class="col-6">
+                                <i class="fas fa-car"></i> Type: {{ listing.house_type }}
+                            </div>
+                        </div>
+                        <div class="row py-2 text-secondary">
+                            <div class="col-6">
+                                <i class="fas fa-bed"></i> Property fee: <br>&nbsp;&nbsp;&nbsp;&nbsp;{{ listing.property_fee }}</div>
+                        <!--                    <div class="col-6">-->
+                        <!--                      <i class="fas fa-bath"></i> Bathrooms: {{ listing.bathrooms }}</div>-->
+                        </div>
+                        <hr>
+                        <div class="row py-2 text-secondary">
+                            <div class="col-12">
+                                <i class="fas fa-user"></i> Developer:<br>&nbsp;&nbsp;&nbsp;&nbsp;{{ listing.developer }}
+                            </div>
+                        </div>
+                        <div class="row py-2 text-secondary">
+                            <div class="col-12">
+                                <i class="fas fa-user"></i> Property Company:<br>&nbsp;&nbsp;&nbsp;&nbsp;{{ listing.property_company }}
+                            </div>
+                        </div>
+<!--                        <div class="row text-secondary pb-2">-->
+<!--                            <div class="col-6">-->
+<!--                                <i class="fas fa-clock"></i> {{ listing.list_date | timesince }}-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <hr>
+                        <a href="{% url 'listing_div_old' listing.id %}" class="btn btn-primary btn-block">More Info</a>
+                        <a href="{% url 'search_div_old' listing.div_id %}" class="btn btn-primary btn-block">View Subdivisions</a>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            {% endfor %}
+            {% else %}
+            <div class="col-md-12">
+                <p>No listings available</p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        <!-- Pagination -->
+         <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    {% if page.has_previous %}
+                        <a class="page-link" href="?page={{ page.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    {% endif %}
+                </li>
+                <!-- 形如 12345678910...13 -->
+                <li>
+                    {% if ifEllipsis == 1 %}
+                        {% if page.number >= 1 and page.number <= 10 %}
+                            {% for i in range1 %}
+                                {% if i >= 1 and i <= 10 %}
+                                    <li {% if page.number == i %} class="page-item" {% endif %}>
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% elif i == 12 %}
+                                    <li {% if page.number == page.paginator.num_pages %} class="page-item" {% endif %}>
+                                        <a class="page-link"
+                                           href="?page={{ page.paginator.num_pages }}">{{ page.paginator.num_pages }}</a>
+                                    </li>
+                                {% elif i == 11 %}
+                                    <li>
+                                        <a>...</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif page.number == page.paginator.num_pages %}
+                            {% for i in range1 %}
+                                {% if i >= 1 and i <= 10 %}
+                                    <li {% if page.number == i %} class="page-item" {% endif %}>
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% elif i == 12 %}
+                                    <li {% if page.number == page.paginator.num_pages %} class="active" {% endif %}>
+                                        <a class="page-link"
+                                           href="?page={{ page.paginator.num_pages }}">{{ page.paginator.num_pages }}</a>
+                                    </li>
+                                {% elif i == 11 %}
+                                    <li>
+                                        <a>...</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif page.number == 11 %}
+                            {% for i in range3 %}
+                                {% if i >= 1 and i <= 10 %}
+                                    <li {% if page.number == i %} class="page-item" {% endif %}>
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% elif i == 13 %}
+                                    <li {% if page.number == page.paginator.num_pages %} class="page-item" {% endif %}>
+                                        <a class="page-link"
+                                           href="?page={{ page.paginator.num_pages }}">{{ page.paginator.num_pages }}</a>
+                                    </li>
+                                {% elif i == 11 %}
+                                    <li {% if page.number == i %} class="page-item" {% endif %}>
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a>...</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif page.number == lastButOne %}
+                            {% for i in range3 %}
+                                {% if i >= 1 and i <= 10 %}
+                                    <li {% if page.number == i %} class="active" {% endif %}>
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% elif i == 13 %}
+                                    <li {% if page.number == page.paginator.num_pages %} class="page-item" {% endif %}>
+                                        <a href="?page={{ page.paginator.num_pages }}">{{ page.paginator.num_pages }}</a>
+                                    </li>
+                                {% elif i == 12 %}
+                                    <li {% if page.number == lastButOne %} class="page-item" {% endif %}>
+                                        <a class="page-link" href="?page={{ lastButOne }}">{{ lastButOne }}</a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a>...</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif page.number > 11 and page.number < lastButOne %}
+                            {% for i in range2 %}
+                                {% if i >= 1 and i <= 10 %}
+                                    <li {% if page.number == i %} class="page-item" {% endif %}>
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% elif i == 11 %}
+                                    <li>
+                                        <a>...</a>
+                                    </li>
+                                {% elif i == 12 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page.number }}">{{ page.number }}</a>
+                                    </li>
+                                {% elif i == 13 %}
+                                    <li>
+                                        <a>...</a>
+                                    </li>
+                                {% elif i == 14 %}
+                                    <li {% if page.number == page.paginator.num_pages %} class="page-item" {% endif %}>
+                                        <a class="page-link"
+                                           href="?page={{ page.paginator.num_pages }}">{{ page.paginator.num_pages }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% elif ifEllipsis == 0 %}
+                        {% for i in page.paginator.page_range %}
+                            <li {% if page.number == i %} class="page-item" {% endif %}>
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </li>
+                <li>
+                    {% if page.has_next %}
+                        <a class="page-link" href="?page={{ page.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    {% endif %}
+                </li>
+                <li>
+                    <a class="page-link">共{{ page.paginator.num_pages }}页</a>
+                </li>
+
+            </ul>
+        </nav>
+
+
+    </div>
+</section>
+{% endblock %}
